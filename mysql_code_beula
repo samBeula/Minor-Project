@@ -1,0 +1,100 @@
+[training@10 ~]$ mysql --user=training --password=training
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 5.1.66 Source distribution
+
+Copyright (c) 2000, 2012, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases
+    -> ;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| hue                |
+| metastore          |
+| movielens          |
+| mysql              |
+| test               |
+| training           |
++--------------------+
+7 rows in set (0.09 sec)
+
+mysql> create database ecommercedata;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> use ecommercedata;
+Database changed
+mysql> load data infile '/home/training/Desktop/clickstream_data.csv' into table clickstream_data fields terminated by ',' lines terminated by '\n' ignore 1 lines;
+ERROR 1146 (42S02): Table 'ecommercedata.clickstream_data' doesn't exist
+mysql> create table clickstream_data(userid int,timestamp TIMESTAMP,page varchar(20));
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> load data infile '/home/training/Desktop/clickstream_data.csv' into table clickstream_data fields terminated by ',' lines terminated by '\n' ignore 1 lines;
+Query OK, 13 rows affected (0.00 sec)
+Records: 13  Deleted: 0  Skipped: 0  Warnings: 0
+
+mysql> select * from clickstream_data;
++--------+---------------------+----------------+
+| userid | timestamp           | page           |
++--------+---------------------+----------------+
+      |1 | 2023-01-01 10:00:00 | homepage
+  |    1 | 2023-01-01 10:01:00 | product_page
+      |2 | 2023-01-01 10:02:00 | homepage
+     | 2 | 2023-01-01 10:03:00 | cart_page
+      |3 | 2023-01-01 10:05:00 | homepage
+  |    3 | 2023-01-01 10:06:00 | product_page
+     | 3 | 2023-01-01 10:07:00 | cart_page
+      |4 | 2023-01-01 10:09:00 | homepage
+  |    4 | 2023-01-01 10:10:00 | product_page
+     | 4 | 2023-01-01 10:11:00 | cart_page
+ |     4 | 2023-01-01 10:12:00 | checkout_page
+      |5 | 2023-01-01 10:15:00 | homepage
+  |    5 | 2023-01-01 10:16:00 | product_page
++--------+---------------------+----------------+
+13 rows in set (0.00 sec)
+
+mysql> create table customer_data(userid int,name varchar,page varchar(20));ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'page varchar(20))' at line 1
+mysql> create table customer_data(userid int,name varchar(20),email varchar(20));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> load data infile '/home/training/Desktop/customer_data.csv' into table customer_data fields terminated by ',' lines terminated by '\n' ignore 1 lines;
+Query OK, 5 rows affected, 5 warnings (0.00 sec)
+Records: 5  Deleted: 0  Skipped: 0  Warnings: 5
+
+mysql> select * from customer_data;+--------+----------------+----------------------+
+| userid | name           | email                |
++--------+----------------+----------------------+
+|      1 | John Doe       | john.doe@example.com |
+|      2 | Jane Smith     | jane.smith@example.c |
+|      3 | Robert Johnson | robert.johnson@examp |
+|      4 | Lisa Brown     | lisa.brown@example.c |
+|      5 | Michael Wilson | michael.wilson@examp |
++--------+----------------+----------------------+
+5 rows in set (0.00 sec)
+
+mysql> 
+mysql> create table purchase_data(userid int,timestamp TIMESTAMP,amount int);Query OK, 0 rows affected (0.22 sec)
+
+mysql> load data infile '/home/training/Desktop/purchase_data.csv' into table purchase_data fields terminated by ',' lines terminated by '\n' ignore 1 lines;
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Deleted: 0  Skipped: 0  Warnings: 0
+
+mysql> select * from purchase_data;+--------+---------------------+--------+
+| userid | timestamp           | amount |
++--------+---------------------+--------+
+|      1 | 2023-01-01 10:05:00 |    100 |
+|      2 | 2023-01-01 10:08:00 |    150 |
+|      3 | 2023-01-01 10:09:00 |    200 |
+|      4 | 2023-01-01 10:13:00 |    120 |
+|      5 | 2023-01-01 10:17:00 |     80 |
++--------+---------------------+--------+
+5 rows in set (0.00 sec)
+
+mysql> 
